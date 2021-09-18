@@ -39,5 +39,4 @@ r/dependencies.r
 r/stilt_cli.r
 test
 Dockerfile
-README.md
 setup
