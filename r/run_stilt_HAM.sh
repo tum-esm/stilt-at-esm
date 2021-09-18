@@ -66,10 +66,12 @@ do
 
 	if [ -f "$FILE" ];then
 
+		# This line simply replaces the date inside the script
 		sed -e "s/20210101/$date/g"  template_script/run_stilt_htus_HAM.r >  run_stilt_htus_HAM_$date.r
 
     Rscript run_stilt_htus_HAM_$date.r > script$date.Rout
 
+		# Same date replacement as before
 		sed -e "s/20210101/$date/g" template_script/merge_fp_template.r >  merge_fp_$date.r
 
 	else
