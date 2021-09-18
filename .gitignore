@@ -1,0 +1,43 @@
+# Simulation outputs
+out/*
+_rslurm*
+
+# System compilation outputs
+fortran/*
+*.bak
+*.a
+*.o
+*.so
+exe/hymodelc
+exe/hycs_std
+exe/arw2arl
+exe/xtrct_grid
+exe/xtrct_time
+
+# R history and environment
+.RData
+.Rapp.history
+.Rhistory
+.Rproj.user
+*.Rproj
+
+# MacOS folder attributes
+.DS_Store
+
+# Test inputs
+stilt-tutorials
+*.bak
+
+# Ignore stuff included in base STILT repo
+.github
+bin
+docs
+exe
+out
+r/src
+r/dependencies.r
+r/stilt_cli.r
+test
+Dockerfile
+README.md
+setup
