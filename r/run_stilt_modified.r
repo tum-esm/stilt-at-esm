@@ -7,7 +7,7 @@
 project <- 'stilt-playground'
 met_type <- 'ERA5'
 stilt_wd <- file.path('/gpfs/scratch/pr48ze/ge69zeh2', project)
-output_wd <- file.path(stilt_wd, 'out')
+output_wd <- file.path(stilt_wd, 'out-wo-dat')
 lib.loc <- .libPaths()[1]
 
 # Parallel simulation settings
@@ -71,7 +71,7 @@ n_met_min          <- 1
 # Model control
 n_hours       <- -14
 numpar        <- 500
-rm_dat        <- F
+rm_dat        <- T
 run_foot      <- T
 run_trajec    <- T
 simulation_id <- NA
@@ -194,7 +194,7 @@ for (d in c('by-id', 'particles', 'footprints')) {
 
 
 # Run trajectory simulations ---------------------------------------------------
-stilt_apply(FUN = simulation_step,
+stilt_apply(FUN = column_sim_step,
             simulation_id = simulation_id,
             slurm = slurm, 
             slurm_options = slurm_options,
