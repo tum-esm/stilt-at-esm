@@ -3,7 +3,7 @@
 require(insol)      # needed to compute solar elevation and azimuth angles
 require(geosphere, warn.conflicts = FALSE)  # needed to compute the lat-lon offset from these angles
 
-source('config.r')
+source('r/config.r')
 
 t_start_original <- simulation_t_start
 t_end_original   <- simulation_t_end

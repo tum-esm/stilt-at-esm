@@ -1,6 +1,6 @@
 #USER SETTINGS: 
 
-source('config.r')
+source('r/config.r')
 
 rotate_footprints   <- FALSE
 integrate_footprint <- TRUE

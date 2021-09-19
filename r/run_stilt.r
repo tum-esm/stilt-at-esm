@@ -3,7 +3,7 @@
 # For documentation, see https://uataq.github.io/stilt/
 # Ben Fasoli
 
-source('config.r')
+source('r/config.r')
 
 # User inputs ------------------------------------------------------------------
 stilt_wd <- file.path(base_dir, project)
