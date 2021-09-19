@@ -1,0 +1,34 @@
+#!/usr/bin/env Rscript
+
+# Environment Settings --------------------------------------------------------
+year <- '%YEAR%'
+month <- '%MONTH%'
+day <- '%DAY%'
+base_dir <- '%BASE_DIR%'
+project  <- '%PROJECT%'
+
+# Slurm Settings --------------------------------------------------------------
+slurm_core_count <- %SLURM_CORE_COUNT%
+slurm_node_count <- %SLURM_NODE_COUNT%
+slurm_timeout    <- '%SLURM_TIMEOUT%'
+slurm_clusters   <- '%SLURM_CLUSTERS%'
+slurm_partition  <- '%SLURM_PARTITION%'
+
+# Met file settings -----------------------------------------------------------
+met_type <- 'ERA5'
+met_path <- '%MET_PATH%'
+map_path <- '%MAP_PATH%'
+
+# Receptor Settings -----------------------------------------------------------
+receptor_names <- %RECEPTOR_NAMES%
+receptor_types <- %RECEPTOR_TYPES%  # choose either slant, point, or vertical
+receptor_lats  <- %RECEPTOR_LATS%  # locations of the instruments
+receptor_lngs  <- %RECEPTOR_LNGS%
+receptor_agls  <- %RECEPTOR_AGLS%  # meters above ground
+
+# Simulation Domain Settings --------------------------------------------------
+simulation_t_start         <- paste(year, '-', month, '-', day, ' %SIMULATION_END_TIME%', sep='')
+simulation_t_end           <- paste(year, '-', month, '-', day, ' %SIMULATION_START_TIME%', sep='')
+simulation_t_step          <- '%SIMULATION_TIME_STEP%'
+simulation_release_heights <- %SIMULATION_RELEASE_HEIGHTS%  # release points above the instrument 
+simulation_angle_limit     <- %SIMULATION_ANGLE_LIMIT%  # unit:degree
