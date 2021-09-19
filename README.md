@@ -7,6 +7,7 @@ Authors (of the modifications):
 Dispatch the job to slurm with:
 ```bash
 module load r/3.6.3-gcc8-mkl
+module load netcdf-hdf5-all/4.7_hdf5-1.10-gcc8-impi
 Rscript r/run_stilt_modified.r
 ```
 

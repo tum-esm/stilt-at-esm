@@ -3,62 +3,55 @@
 # For documentation, see https://uataq.github.io/stilt/
 # Ben Fasoli
 
+source('config.r')
+
 # User inputs ------------------------------------------------------------------
-project <- 'stilt-playground'
-stilt_wd <- file.path('/gpfs/scratch/pr48ze/ge69zeh2', project)
+stilt_wd <- file.path(base_dir, project)
 output_wd <- file.path(stilt_wd, 'out')
 lib.loc <- .libPaths()[1]
 
 # Parallel simulation settings
-n_cores <- 1
-n_nodes <- 1
-slurm   <- n_nodes > 1
+n_cores <- slurm_core_count
+n_nodes <- slurm_node_count
+slurm   <- TRUE
 slurm_options <- list(
-  time      = '300:00:00',
-  account   = 'lin-kp',
-  partition = 'lin-kp'
+  time      = slurm_timeout,
+  clusters  = slurm_clusters,
+  partition = slurm_partition
 )
 
-# Simulation timing, yyyy-mm-dd HH:MM:SS (UTC)
-t_start <- '2015-12-10 00:00:00'
-t_end   <- '2015-12-10 00:00:00'
-run_times <- seq(from = as.POSIXct(t_start, tz = 'UTC'),
-                 to   = as.POSIXct(t_end, tz = 'UTC'),
-                 by   = 'hour')
-
-# Receptor location(s)
-lati <- 40.5
-long <- -112.0
-zagl <- 5
-
-# Expand the run times, latitudes, and longitudes to form the unique receptors
-# that are used for each simulation
-receptors <- expand.grid(run_time = run_times, lati = lati, long = long,
-                         zagl = zagl, KEEP.OUT.ATTRS = F, stringsAsFactors = F)
+# Receptors are now generated differently that in base STILT
+receptors <- readRDS('receptors.rds')
 
 # Footprint grid settings, must set at least xmn, xmx, ymn, ymx below
 hnf_plume <- T
 projection <- '+proj=longlat'
 smooth_factor <- 1
-time_integrate <- F
-xmn <- -113
-xmx <- -111
-ymn <- 39.5
-ymx <- 41.5
+time_integrate <- T
+xmn <- 9.20
+xmx <- 10.60
+ymn <- 53.16
+ymx <- 53.86
 xres <- 0.01
-yres <- xres
+yres <- 0.01
 
 # Meteorological data input
-met_path           <- file.path(stilt_wd, 'stilt-tutorials/01-wbb/met')
-met_file_format    <- '%Y%m%d.%Hz.hrrra'
-met_subgrid_buffer <- 0.2
+met_format_dict    <- c(	'NAMS'= '%Y%m%d_hysplit.t00z.namsa',
+                          'HRRR'='hysplit.%Y%m%d.*z.hrrra',
+                          'GDAS'='%Y%m%d_gdas0p5',
+                          'GFS'='%Y%m%d_gfs0p25',
+                          'ERA5'='ERA5.%Y%m%d.ARL',
+                          'WRFARL' = 'wrfout_d02_%Y-%m-%d.arl'
+                      )
+met_file_format     <- met_format_dict[met_type]
+met_subgrid_buffer <- 0.1
 met_subgrid_enable <- F
 met_subgrid_levels <- NA
 n_met_min          <- 1
 
 # Model control
-n_hours       <- -24
-numpar        <- 1000
+n_hours       <- -14
+numpar        <- 500
 rm_dat        <- T
 run_foot      <- T
 run_trajec    <- T
@@ -72,10 +65,10 @@ capemin     <- -1
 cmass       <- 0
 conage      <- 48
 cpack       <- 1
-delt        <- 1
+delt        <- 5
 dxf         <- 1
 dyf         <- 1
-dzf         <- 0.01
+dzf         <- 0.1
 efile       <- ''
 emisshrs    <- 0.01
 frhmax      <- 3
@@ -83,7 +76,7 @@ frhs        <- 1
 frme        <- 0.1
 frmr        <- 0
 frts        <- 0.1
-frvs        <- 0.01
+frvs        <- 0.1
 hscale      <- 10800
 ichem       <- 8
 idsp        <- 2
@@ -182,7 +175,7 @@ for (d in c('by-id', 'particles', 'footprints')) {
 
 
 # Run trajectory simulations ---------------------------------------------------
-stilt_apply(FUN = simulation_step,
+stilt_apply(FUN = column_sim_step,
             simulation_id = simulation_id,
             slurm = slurm, 
             slurm_options = slurm_options,
@@ -256,6 +249,7 @@ stilt_apply(FUN = simulation_step,
             projection = projection,
             qcycle = qcycle,
             r_run_time = receptors$run_time,
+            r_designator = receptors$designator,
             r_lati = receptors$lati,
             r_long = receptors$long,
             r_zagl = receptors$zagl,

@@ -38,7 +38,10 @@ out-wo-dat
 out-old
 r/dependencies.r
 r/stilt_cli.r
+r/config.r
+r/receptors.rds
 r/src/*
+!r/generate_receptors.r
 !r/src/calc_trajectory.r
 !r/src/column_sim_step.r
 !r/src/stilt_apply.r
@@ -47,3 +50,4 @@ r/src/*
 test
 Dockerfile
 setup
+out.txt
