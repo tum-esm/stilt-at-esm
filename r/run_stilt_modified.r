@@ -8,7 +8,6 @@ project <- 'stilt-playground'
 met_type <- 'ERA5'
 stilt_wd <- file.path('/gpfs/scratch/pr48ze/ge69zeh2', project)
 output_wd <- file.path(stilt_wd, 'out')
-met_path   <- '/dss/dsstumfs01/pn69ki/pn69ki-dss-0004/STILT/Hamburg/arl/'
 lib.loc <- .libPaths()[1]
 
 # Parallel simulation settings
@@ -55,7 +54,7 @@ xres <- 0.01
 yres <- 0.01
 
 # Meteorological data input
-met_path           <- '/dss/dsstumfs01/pn69ki/pn69ki-dss-0004/STILT/Hamburg/arl/'
+met_path           <- '/gpfs/scratch/pr48ze/ge69zeh2/met-data/arl'
 met_format_dict    <- c(	'NAMS'= '%Y%m%d_hysplit.t00z.namsa',
                           'HRRR'='hysplit.%Y%m%d.*z.hrrra',
                           'GDAS'='%Y%m%d_gdas0p5',
@@ -67,7 +66,7 @@ met_file_format     <- met_format_dict[met_type]
 met_subgrid_buffer <- 0.1
 met_subgrid_enable <- F
 met_subgrid_levels <- NA
-n_met_min          <- 2
+n_met_min          <- 1
 
 # Model control
 n_hours       <- -14
@@ -269,6 +268,7 @@ stilt_apply(FUN = simulation_step,
             projection = projection,
             qcycle = qcycle,
             r_run_time = receptors$run_time,
+            r_designator = receptors$designator,
             r_lati = receptors$lati,
             r_long = receptors$long,
             r_zagl = receptors$zagl,

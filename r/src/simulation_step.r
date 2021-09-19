@@ -78,6 +78,7 @@ simulation_step <- function(before_footprint = list(function() {output}),
                             projection = '+proj=longlat',
                             qcycle = 0, 
                             r_run_time,
+                            r_designator,
                             r_lati,
                             r_long,
                             r_zagl,
@@ -232,8 +233,7 @@ simulation_step <- function(before_footprint = list(function() {output}),
     # subdirectories is populated with symbolic links to the shared datasets
     # below and a run-specific SETUP.CFG and CONTROL
     if (is.na(simulation_id)) {
-      simulation_id_format <- paste0('%Y%m%d%H%M_', r_long, '_', r_lati, '_', 
-                                     ifelse(length(r_zagl) > 1, 'X', r_zagl))
+      simulation_id_format <- paste0(r_designator, '_%Y%m%d%H%M_', r_zagl, 'm')
       simulation_id <- strftime(r_run_time, simulation_id_format, 'UTC')
     }
     rundir  <- file.path(output_wd, 'by-id', simulation_id)
