@@ -34,9 +34,12 @@ bin
 docs
 exe
 out
-r/src
+out-na
 r/dependencies.r
 r/stilt_cli.r
+r/src/*
+!r/src/stilt_apply.r
+!r/src/simulation_step.r
 test
 Dockerfile
 setup
