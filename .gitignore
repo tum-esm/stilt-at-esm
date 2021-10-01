@@ -39,7 +39,7 @@ out-old
 r/dependencies.r
 r/stilt_cli.r
 r/config.r
-r/receptors.rds
+receptors.rds
 r/src/*
 !r/generate_receptors.r
 !r/src/calc_trajectory.r
