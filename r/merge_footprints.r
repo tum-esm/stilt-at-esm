@@ -9,7 +9,6 @@ level_alt <- 13 # vertical levels
 library(ncdf4)
 
 rdf <- readRDS('receptors.rds')
-project <- 'stilt-playground'
 out_file <- 'footprint.nc'
 
 stilt_wd <- file.path(base_dir, project)
