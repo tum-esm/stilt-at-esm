@@ -154,4 +154,6 @@ ncatt_put(nc_out, 0, 'documentation', 'github.com/uataq/stilt')
 ncatt_put(nc_out, 0, 'title', 'STILT Footprint')
 ncatt_put(nc_out, 0, 'time_created', format(Sys.time(), tz = 'UTC'))
 
+# TODO: Add repo sha's to nc file
+
 #warnings()
