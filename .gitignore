@@ -36,17 +36,16 @@ exe
 out
 out-wo-dat
 out-old
+
+# exclude original STILT files, include modifications
 r/dependencies.r
 r/stilt_cli.r
 r/config.r
 receptors.rds
 r/src/*
-!r/generate_receptors.r
-!r/src/calc_trajectory.r
-!r/src/column_sim_step.r
-!r/src/stilt_apply.r
 !r/src/simulation_step.r
 !r/src/write_control.r
+
 test
 Dockerfile
 setup
