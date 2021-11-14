@@ -28,7 +28,7 @@ squeue --clusters cm2_tiny --partitions cm2_tiny
 
 TODO ...
 
-1. Set up STILT v2 @ commit sha ...
+1. Set up STILT v2 @ commit sha (https://www.rdocumentation.org/packages/ghit/versions/0.2.18/topics/install_github, https://github.com/uataq/uataq/blob/master/R/stilt_init.r -> pass repo @ ...)
 2. Remove local .git folder
 3. git init new repo
 4. set remote url to this repo
