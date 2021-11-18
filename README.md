@@ -1,43 +1,97 @@
 
-## Temporary notes
+# STILT at ESM
 
-This repository contains only the files we modified from https://github.com/uataq/stilt (Commit 733d95712072c7a13cfc6a9a0106d712f480c002) to make STILT run automatically on the Linux Cluster @ TUM
+## What is it?
 
-Authors (of the modifications): 
+This repository contains only the files we modified from [STILT v2](https://github.com/uataq/stilt) (Commit 733d95712072c7a13cfc6a9a0106d712f480c002) to make STILT run for out total column measurement approach.
+
+Authors of these modifications: 
 - Xinxu Zhao, xinxu.zhao@tum.de
 - Moritz Makowski, moritz.makowski@tum.de
 
-Dispatch the job to slurm with:
+<br/>
+<br/>
+
+## How to run it?
+
+1. Use the file `r/config.example.r` to create a file `config.r` for your setup
+
+2. Create a list of discrete column receptors
 ```bash
-module load r/3.6.3-gcc8-mkl
-module load netcdf-hdf5-all/4.7_hdf5-1.10-gcc8-impi
-Rscript r/run_stilt_modified.r
+Rscript r/create_receptors.r  # will generate a file named receptors.rds
 ```
 
-*I will move the code in `r/run_stilt_modified.r` into `r/run_stilt.r`, once the modifications are debugged. The one can see the differences we made immediately with `git diff HEAD 54d9e0d r/run_stilt.r`*
-
-Check the status of the slurm jobs with:
+3. Dispatch the job to SLURM
 ```bash
-squeue --clusters cm2_tiny --partitions cm2_tiny
+Rscript r/run_stilt.r
+```
+
+4. Check the status of the SLURM jobs with:
+```bash
+squeue --clusters ... --partitions ...
+```
+
+5. After STILT is finished, merge the discrete column footprints into one total column footprint
+```bash
+Rscript r/merge_receptors.r  # will generate a file named footprint.nc
 ```
 
 <br/>
 <br/>
 
-## How to set up STILT at ESM?
+## How to set it up?
 
-TODO ...
+1.Set up STILT v2 (https://uataq.github.io/stilt/#/quick-start) with the following modifications:
 
-1. Set up STILT v2 @ commit sha (https://www.rdocumentation.org/packages/ghit/versions/0.2.18/topics/install_github, https://github.com/uataq/uataq/blob/master/R/stilt_init.r -> pass repo @ ...)
-2. Remove local .git folder
-3. git init new repo
-4. set remote url to this repo
-5. clone with allow files (https://gist.github.com/ZeroDragon/6707408)
+```bash
+# 1. instead of
+Rscript -e "install.packages('devtools'); devtools::install_github('benfasoli/uataq')"
+# you should use
+Rscript -e "install.packages('devtools', repos='http://cran.us.r-project.org'); devtools::install_github('uataq/uataq@f025aaddff195239f2c51d19a5f169b70335e000')"
+
+# 2. instead of
+Rscript -e "uataq::stilt_init('myproject')"
+# you should use
+Rscript -e "uataq::stilt_init('myproject', repo='--depth 200 https://github.com/uataq/stilt myproject && cd myproject && git checkout 733d95712072c7a13cfc6a9a0106d712f480c002 && cd .. && echo')"
+```
+
+<br/>
+
+2. cd into to project directory
+
+```bash
+cd myproject
+``` 
+
+<br/>
+
+3. Install all dependencies for STILT v2 so that the following tests pass
+
+```bash
+bash test/test_setup.sh
+bash test/test_run_stilt.sh
+```
+
+
+4. Remove `.git` folder and all unused files:
+5. 
+```bash
+rm -rf .git && rm -rf .github && rm -rf docs && rm -rf test && rm setup
+```
+
+5. Pull our modifications into the directory
+
+```bash
+git init
+git remote add origin https://github.com/tum-esm/stilt-at-esm.git
+git fetch origin main
+git reset --hard origin/main
+```
 
 <br/>
 <br/>
 
-## How has **STILT at ESM** changed from the original STILT v2 codebase
+## How has **STILT at ESM** changed from the original **STILT v2** codebase?
 
 The links in the following list will lead to comparisons between the files in [_STILT v2 @ 733d957_](https://github.com/uataq/stilt/tree/733d95712072c7a13cfc6a9a0106d712f480c002) and the latest version of _STILT at ESM_:
 
