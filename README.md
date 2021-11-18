@@ -93,15 +93,15 @@ git reset --hard origin/main
 
 ## How has **STILT at ESM** changed from the original **STILT v2** codebase?
 
-The links in the following list will lead to comparisons between the files in [_STILT v2 @ 733d957_](https://github.com/uataq/stilt/tree/733d95712072c7a13cfc6a9a0106d712f480c002) and the latest version of _STILT at ESM_:
+You can use [git diff](https://git-scm.com/docs/git-diff) to compare how individual files have changed between commits. The following lists include all changes from [_STILT v2 @ 733d957_](https://github.com/uataq/stilt/tree/733d95712072c7a13cfc6a9a0106d712f480c002).
 
-`r/run_stilt.r` has changed:
-https://github.com/tum-esm/stilt-at-esm/compare/54d9e0d...main#diff-99df464c93e63dc4b041434685f7574c69493eb8a816c4941b9f3d1dccdacce6
+How files have changed:
+* **`r/run_stilt.r`**: `git diff 54d9e0d HEAD r/run_stilt.r`
+* **`r/src/simulation_step.r`:** `git diff 328a82a HEAD r/src/simulation_step.r`
+* **`r/src/simulation_step.r`:** `git diff 466966c HEAD r/src/simulation_step.r`
 
-`r/src/simulation_step.r` has changed:
-https://github.com/tum-esm/stilt-at-esm/compare/328a82a...main#diff-e086ef3b8df283730533662a4adcb3107ed8bd1a05a1386a458aacb4680eebcc
-
-`r/src/simulation_step.r` has changed:
-https://github.com/tum-esm/stilt-at-esm/compare/466966c...main#diff-af94615be17078359a21008c50a38c09ef3c2e2b6470a9def77e51f19e4c8e2b
-
-`r/config.example.r`, `r/config.template.txt`, `r/generate_receptors.r`, `r/merge_footprints.r` have been added to the codebase (not included in STILT v2).
+What files have been added (not included in STILT v2):
+* **`r/config.example.r`**
+* **`r/config.template.txt`**
+* **`r/generate_receptors.r`**
+* **`r/merge_footprints.r`**
