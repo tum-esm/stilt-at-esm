@@ -12,36 +12,9 @@ Authors of these modifications:
 <br/>
 <br/>
 
-## How to run it?
-
-1. Use the file `r/config.example.r` to create a file `config.r` for your setup
-
-2. Create a list of discrete column receptors
-```bash
-Rscript r/create_receptors.r  # will generate a file named receptors.rds
-```
-
-3. Dispatch the job to SLURM
-```bash
-Rscript r/run_stilt.r
-```
-
-4. Check the status of the SLURM jobs with:
-```bash
-squeue --clusters ... --partitions ...
-```
-
-5. After STILT is finished, merge the discrete column footprints into one total column footprint
-```bash
-Rscript r/merge_receptors.r  # will generate a file named footprint.nc
-```
-
-<br/>
-<br/>
-
 ## How to set it up?
 
-1.Set up STILT v2 (https://uataq.github.io/stilt/#/quick-start) with the following modifications:
+**1.** Set up STILT v2 (https://uataq.github.io/stilt/#/quick-start) with the following modifications:
 
 ```bash
 # 1. instead of
@@ -55,37 +28,59 @@ Rscript -e "uataq::stilt_init('myproject')"
 Rscript -e "uataq::stilt_init('myproject', repo='--depth 200 https://github.com/uataq/stilt myproject && cd myproject && git checkout 733d95712072c7a13cfc6a9a0106d712f480c002 && cd .. && echo')"
 ```
 
-<br/>
-
-2. cd into to project directory
+**2.** cd into to project directory
 
 ```bash
 cd myproject
 ``` 
 
-<br/>
-
-3. Install all dependencies for STILT v2 so that the following tests pass
+**3.** Install all dependencies for STILT v2 so that the following tests pass
 
 ```bash
 bash test/test_setup.sh
 bash test/test_run_stilt.sh
 ```
 
+**4.** Remove `.git` folder and all unused files:
 
-4. Remove `.git` folder and all unused files:
-5. 
 ```bash
 rm -rf .git && rm -rf .github && rm -rf docs && rm -rf test && rm setup
 ```
 
-5. Pull our modifications into the directory
+**5.** Pull our modifications into the directory
 
 ```bash
 git init
 git remote add origin https://github.com/tum-esm/stilt-at-esm.git
 git fetch origin main
 git reset --hard origin/main
+```
+
+<br/>
+<br/>
+
+## How to run it?
+
+**1.** Use the file `r/config.example.r` to create a file `r/config.r` for your setup
+
+**2.** Create a list of discrete column receptors
+```bash
+Rscript r/create_receptors.r  # will generate a file named receptors.rds
+```
+
+**3.** Dispatch the job to SLURM
+```bash
+Rscript r/run_stilt.r
+```
+
+**4.** Check the status of the SLURM jobs with:
+```bash
+squeue --clusters ... --partitions ...
+```
+
+**5.** After STILT is finished, merge the discrete column footprints into one total column footprint
+```bash
+Rscript r/merge_receptors.r  # will generate a file named footprint.nc
 ```
 
 <br/>
