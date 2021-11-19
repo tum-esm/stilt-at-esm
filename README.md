@@ -98,7 +98,7 @@ You can use [git diff](https://git-scm.com/docs/git-diff) to compare how individ
 How files have changed:
 * **`r/run_stilt.r`**: `git diff 54d9e0d HEAD r/run_stilt.r`
 * **`r/src/simulation_step.r`:** `git diff 328a82a HEAD r/src/simulation_step.r`
-* **`r/src/simulation_step.r`:** `git diff 466966c HEAD r/src/simulation_step.r`
+* **`r/src/write_control.r`:** `git diff 466966c HEAD r/src/write_control.r`
 
 What files have been added (not included in STILT v2):
 * **`r/config.example.r`**
