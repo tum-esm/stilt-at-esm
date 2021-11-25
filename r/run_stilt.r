@@ -28,12 +28,12 @@ hnf_plume <- T
 projection <- '+proj=longlat'
 smooth_factor <- 1
 time_integrate <- T
-xmn <- 9.20
-xmx <- 10.60
-ymn <- 53.16
-ymx <- 53.86
-xres <- 0.01
-yres <- 0.01
+xmn <- area_lng_from
+xmx <- area_lng_to
+ymn <- area_lat_from
+ymx <- area_lat_to
+xres <- area_lng_resolution
+yres <- area_lat_resolution
 
 # Meteorological data input
 met_format_dict    <- c(	'NAMS'= '%Y%m%d_hysplit.t00z.namsa',

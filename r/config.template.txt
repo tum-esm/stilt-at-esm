@@ -1,32 +1,40 @@
 #!/usr/bin/env Rscript
 
-# Environment Settings --------------------------------------------------------
+# environment settings --------------------------------------------------------
 year <- '%YEAR%'
 month <- '%MONTH%'
 day <- '%DAY%'
 base_dir <- '%BASE_DIR%'
 project  <- '%PROJECT%'
 
-# Slurm Settings --------------------------------------------------------------
+# slurm settings --------------------------------------------------------------
 slurm_core_count <- %SLURM_CORE_COUNT%
 slurm_node_count <- %SLURM_NODE_COUNT%
 slurm_timeout    <- '%SLURM_TIMEOUT%'
 slurm_clusters   <- '%SLURM_CLUSTERS%'
 slurm_partition  <- '%SLURM_PARTITION%'
 
-# Met file settings -----------------------------------------------------------
+# met file settings -----------------------------------------------------------
 met_type <- 'ERA5'
 met_path <- '%MET_PATH%'
 map_path <- '%MAP_PATH%'
 
-# Receptor Settings -----------------------------------------------------------
+# receptor settings -----------------------------------------------------------
 receptor_names <- %RECEPTOR_NAMES%
 receptor_types <- %RECEPTOR_TYPES%  # choose either slant, point, or vertical
 receptor_lats  <- %RECEPTOR_LATS%  # locations of the instruments
 receptor_lngs  <- %RECEPTOR_LNGS%
 receptor_agls  <- %RECEPTOR_AGLS%  # meters above ground
 
-# Simulation Domain Settings --------------------------------------------------
+# geographic settings ----------------------------------------------------------
+area_lng_from <- %AREA_LNG_FROM%
+area_lng_to <- %AREA_LNG_TO%
+area_lat_from <- %AREA_LAT_FROM%
+area_lat_to <- %AREA_LAT_TO%
+area_lng_resolution <- %AREA_LNG_RESOLUTION%
+area_lat_resolution <- %AREA_LAT_RESOLUTION%
+
+# simulation domain settings --------------------------------------------------
 simulation_t_start         <- paste(year, '-', month, '-', day, ' %SIMULATION_T_START%', sep='')
 simulation_t_end           <- paste(year, '-', month, '-', day, ' %SIMULATION_T_END%', sep='')
 simulation_t_step          <- '%SIMULATION_T_STEP%'
