@@ -65,18 +65,82 @@ t_start <- min(receptor_times)
 
 run_times <- seq(from = as.POSIXct(t_start, tz='UTC'),to = as.POSIXct(t_end, tz='UTC'),by = t_step )
 
-#compute the vertical scaling factors:
-doi <- format ( run_times[1] , '%Y%m%d' )
-Av <- 6.022140857e23 #molec. / mol
-g0 <- 9.8 # m/s2
-m_air <- .029 #kg /mol
+### VERTICAL SCALING FACTOR RELATED:
+
+#load map-file:
 mapCols <- c('Height','Temp','Pressure','Density','h2o','hdo','co2','n2o','co','ch4','hf','gravity')
 map <- read.table(
 	file.path(map_directory, paste('L1', format (run_times[1], '%Y%m%d'), '.map', sep='')),
 	skip=11, col.names=mapCols, stringsAsFactors=FALSE, sep=','
 )
+
+# density function of vertical densities
 densFunc <- splinefun(x=map$Height,y=map$Density)
-pressure_function <- splinefun(x=map$Height, y=map$Pressure)
+
+# apply exponential fit to last 10 altitude elements
+exp_fit <- nls(Density ~ b * exp(-1/c*Height),data=tail(map, n=10) ,start=list(b=2.5e19,c=7.4))
+#plot(map$Density,map$Height)
+#lines(predict(exp_fit, list(Height = map$Height)),map$Height, col = "red")
+
+#integrate
+integrate <- function(myfun,lower,upper,resolution=1000){
+  # equally spaced x-bins (resolution)
+  # multiplied by function-value, evaluated in the middle of x-bins
+  dx <- (upper-lower)/resolution
+  x <- seq(from=lower+dx/2,to=upper-dx/2,by=dx)
+  return(sum(myfun(x)*dx))
+}
+
+# top of atmosphere integrate exponential function up to 7000km (very small contribution)
+toa_exp <- integrate(function(x)predict(exp_fit, list(Height = x)),max(map$Height),7000,1e6)
+
+#integration borders for given relative_release_heights:
+ib <- c(0)
+for (i in seq(1,length(relative_release_heights)-1)){
+  
+  ib <- c(ib,0.5*(relative_release_heights[i]+relative_release_heights[i+1]))
+  
+}
+ib <- c(ib,tail(relative_release_heights,n=1)+0.5*diff(tail(relative_release_heights,n=2)))
+
+#plot(densFunc(ib/1000),ib,col='red')
+#points(densFunc(relative_release_heights/1000),relative_release_heights)
+
+# integrate all:
+get_scfs <- function(ib,precision=1e5){
+  scf <- c()
+  for (i in seq(1,length(relative_release_heights))){
+    zl <- ib[i]
+    zh <- ib[i+1]
+     scf <- c(scf,integrate(densFunc,zl,zh,precision))
+  }
+  
+  # integral above highest receptor to top of atmosphere:
+  toa <- integrate(densFunc,tail(ib,n=1)/1000,max(map$Height),1e5)+toa_exp
+  
+  # norm scf by molecules above
+  scf <- scf/toa
+  
+  return (scf)
+}
+
+#calculate scaling factors
+df_scf <- expand.grid(relative_release_heights,designators)
+names(df_scf) <- c('heights','designator')
+df_scf$zagl <- sensor_agls[ match(df_scf$designator,designators) ]
+df_scf$scf <- NA
+for (designator in designators){
+  m <- df_scf$designator==designator
+  zagl <- sensor_agls[which(designators==designator)]
+  scfs <- get_scfs((ib+zagl)/1000)
+  df_scf[m,'scf'] <- scfs[match(df_scf$heights[m],relative_release_heights)]
+}
+
+add_scf <- function(height,designator){
+  return(df_scf[(df_scf$heights==height) & (df_scf$designator==designator),'scf'])
+}
+
+### END VERTICAL SCALING FACTOR ###
 
 df <-  expand.grid(relative_release_heights,designators,run_times,stringsAsFactors=FALSE)
 colnames(df) <- c('relative_z','designator','run_time')
@@ -95,37 +159,14 @@ add_zagl <- function(relative_z,designator){
 }
 
 
-add_scaling_factor <- function(zagl,designator){
-	sensor_agl <- sensor_agls[ which(designators == designator) ]
-# Taylor's original code should be kept here, if you could run a case which holds the same pressure differencec:
-	air_column <- pressure_function( sensor_agl/1000.0 )*100*Av/(g0*m_air) #molec. / m2. Total molecules in column
-	z_high <- sensor_agl
-	release_heights <- relative_release_heights+sensor_agl
 
-	n_of_z <- densFunc( as.numeric(release_heights)/1000.0 )*100*100*100  # molec. / m3
-	dz <- NA
-
-	for( i in 1:(length(release_heights)-1)) {
-		z_low  <- z_high	
-		z_high <- mean( as.numeric( release_heights[i:i+1] ) )
-		dz[i]  <- z_high - z_low
-	}
-
-	dz[i+1] <- z_high - z_low
-
-	vertical_scaling_factors <- n_of_z*dz/air_column
-
-	zagl_index <- which(release_heights == zagl)
-	return( vertical_scaling_factors[zagl_index])
-}
-	
 recep_lat_lon <- mapply( make_receptors, df$relative_z, df$designator, df$run_time ) 
 
 df['long'] <- round(recep_lat_lon[1,],3)
 df['lati'] <- round(recep_lat_lon[2,],3)
 df['zagl'] <- mapply( add_zagl , df$relative_z, df$designator )
 
-df['scaling_factors'] <- mapply( add_scaling_factor, df$zagl, df$designator)
+df['scaling_factors'] <- mapply( add_scf,df$relative_z,df$designator)
 
 df['relative_z'] <- NULL
 
