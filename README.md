@@ -3,7 +3,7 @@
 
 ## What is it?
 
-This repository contains only the files we modified from [STILT v2](https://github.com/uataq/stilt) (Commit 733d95712072c7a13cfc6a9a0106d712f480c002) to make STILT run for out total column measurement approach.
+This repository contains only the files we modified from [STILT v2](https://github.com/uataq/stilt) (Commit 9524fe765d261710041014548c4056323c3e3655) to make STILT run for out total column measurement approach.
 
 Authors of these modifications: 
 - Xinxu Zhao, xinxu.zhao@tum.de
@@ -25,7 +25,7 @@ Rscript -e "install.packages('devtools', repos='http://cran.us.r-project.org'); 
 # 2. instead of
 Rscript -e "uataq::stilt_init('myproject')"
 # you should use
-Rscript -e "uataq::stilt_init('myproject', repo='--depth 200 https://github.com/uataq/stilt myproject && cd myproject && git checkout 733d95712072c7a13cfc6a9a0106d712f480c002 && cd .. && echo')"
+Rscript -e "uataq::stilt_init('myproject', repo='--depth 200 https://github.com/uataq/stilt myproject && cd myproject && git checkout 9524fe765d261710041014548c4056323c3e3655 && cd .. && echo')"
 ```
 
 **2.** cd into to project directory
