@@ -45,6 +45,8 @@ receptors.rds
 r/src/*
 !r/src/simulation_step.r
 !r/src/write_control.r
+!r/src/calc_footprint.r
+!r/src/column_sim_step.r
 
 test
 Dockerfile
