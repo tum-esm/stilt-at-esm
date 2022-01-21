@@ -14,47 +14,27 @@ Authors of these modifications:
 
 ## How to set it up?
 
-**1.** Set up STILT v2 (https://uataq.github.io/stilt/#/quick-start) with the following modifications:
+**1.** Clone this repository
 
 ```bash
-# 1. instead of
-Rscript -e "install.packages('devtools'); devtools::install_github('benfasoli/uataq')"
-# you should use
-Rscript -e "install.packages('devtools', repos='http://cran.us.r-project.org'); devtools::install_github('uataq/uataq@f025aaddff195239f2c51d19a5f169b70335e000')"
-
-# 2. instead of
-Rscript -e "uataq::stilt_init('myproject')"
-# you should use
-Rscript -e "uataq::stilt_init('myproject', repo='--depth 200 https://github.com/uataq/stilt myproject && cd myproject && git checkout 9524fe765d261710041014548c4056323c3e3655 && cd .. && echo')"
+git clone https://github.com/tum-esm/stilt-at-esm
 ```
 
-**2.** cd into to project directory
+**2.** Check whether the correct versions of `r` and `netcdf` are present on your system. You might have to adjust the lines `13-14` in the script `install.sh` depending on your setup.
 
-```bash
-cd myproject
-``` 
+**3.** Install the project
 
-**3.** Install all dependencies for STILT v2 so that the following tests pass
-
-```bash
-bash test/test_setup.sh
-bash test/test_run_stilt.sh
+```
+cd stilt-at-esm
+bash ./install.sh
 ```
 
-**4.** Remove `.git` folder and all unused files:
+<br/>
+<br/>
 
-```bash
-rm -rf .git && rm -rf .github && rm -rf docs && rm -rf test && rm setup
-```
+If this is the first time that you install this project in a certain environment you should probably check whether the STILT v2 tests have passed. In `install.sh` you can uncomment line `27` to stop the installation at that command in order to see whether the tests have been successful.
 
-**5.** Pull our modifications into the directory
-
-```bash
-git init
-git remote add origin https://github.com/tum-esm/stilt-at-esm.git
-git fetch origin main
-git reset --hard origin/main
-```
+The installation script is idempotent (can be run multiple times without any effect): At the beginning of its execution it removes all files that are ignored by this git project (= all files generated during its execution).
 
 <br/>
 <br/>
