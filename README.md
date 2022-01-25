@@ -20,7 +20,7 @@ Authors of these modifications:
 git clone https://github.com/tum-esm/stilt-at-esm
 ```
 
-**2.** Check whether the correct versions of `r` and `netcdf` are present on your system. You might have to adjust the lines `13-14` in the script `install.sh` depending on your setup.
+**2.** Check whether the correct versions of `r` and `netcdf` are present on your system. You might have to adjust line `13` in the script `install.sh` depending on your setup.
 
 **3.** Install the project
 
@@ -32,7 +32,7 @@ bash ./install.sh
 <br/>
 <br/>
 
-If this is the first time that you install this project in a certain environment you should probably check whether the STILT v2 tests have passed. In `install.sh` you can uncomment line `27` to stop the installation at that command in order to see whether the tests have been successful.
+If this is the first time that you install this project in a certain environment you should probably check whether the STILT v2 tests have passed. In `install.sh` you can uncomment line `25` to stop the installation at that command in order to see whether the tests have been successful.
 
 The installation script is idempotent (can be run multiple times without any effect): At the beginning of its execution it removes all files that are ignored by this git project (= all files generated during its execution).
 

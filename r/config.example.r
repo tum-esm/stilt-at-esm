@@ -40,3 +40,4 @@ simulation_t_end           <- paste(year, '-', month, '-', day, ' 18:00:00', sep
 simulation_t_step          <- '15 mins'
 simulation_release_heights <- c(0, 166, 335, 507, 681, 859, 1040, 1224, 1412, 1603, 1798, 1997, 2200)  # release points above the instrument 
 simulation_angle_limit     <- 75  # unit:degree
+simulation_merge_background_times <- TRUE  

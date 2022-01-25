@@ -3,7 +3,7 @@
 source('r/config.r')
 
 rotate_footprints   <- FALSE
-integrate_footprint <- TRUE
+time_integrate <- simulation_merge_background_times
 bk_time_resolution  <- 15*60 #in seconds
 level_alt <- 13 # vertical levels
 library(ncdf4)
@@ -87,7 +87,7 @@ back_time_dim  <- ncdim_def('back_time', 'seconds since 1970-01-01 00:00:00Z',bk
 nc_vars <- list()
 
 for( des in designators ){
-	if(integrate_footprint){
+	if(time_integrate){
                 nc_vars[[paste(des,'foot')]] <- ncvar_def(paste(des,'foot'),'ppm (umol-1 m2 s)',list(xdim,ydim,recep_time_dim),-1)
         }else{
                 nc_vars[[paste(des,'foot')]] <- ncvar_def(paste(des,'foot'),'ppm (umol-1 m2 s)',list(xdim,ydim,recep_time_dim,foot_time_dim),-1)
@@ -117,7 +117,7 @@ for( row in rownames(rdf) ){
 	recep_idx <- which( recep_times == recep_time)
         des_idx <- which( designators == des)
 
-	if( integrate_footprint ){
+	if( time_integrate ){
 		foot_0 <- ncvar_get(nc_out, nc_vars[[paste(des,'foot')]],
 			start = c(1, 1, recep_idx) ,
 			count = c(nx,ny,1) )

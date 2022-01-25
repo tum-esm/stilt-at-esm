@@ -10,8 +10,7 @@ fi
 git clean -dfX
 
 # load libraries (might depend on your HPC environment)
-module load r/3.6.3-gcc8-mkl
-module load netcdf-hdf5-all
+module load r/3.6.3-gcc8-mkl && module load netcdf-hdf5-all
 
 # install the required R packages
 Rscript -e "install.packages('devtools', repos='http://cran.us.project.# org'); devtools::install_github('uataq/# taq@f025aaddff195239f2c51d19a5f169b70335e000')"
@@ -22,9 +21,11 @@ Rscript -e "uataq::stilt_init('tmp', repo='--depth 200 https://github.com/uataq/
 cd tmp
 
 # test the stilt-v2 installation
-bash test/test_setup.sh
-bash test/test_run_stilt.sh
+bash test/test_setup.sh && bash test/test_run_stilt.sh
 # exit
+
+# remove job artifacts from tests
+rm -rf out && mkdir out
 
 # remove all unused stuff from stilt-v2 project
 rm -rf .git .github docs test stilt-tutorials
@@ -32,7 +33,5 @@ rm setup README.md Dockerfile .gitignore
 
 # merge stilt-at-esm files with stilt-v2 files
 cd ..
-cp -r r tmp
-rm -rf r
-cp -r tmp/* .
-rm -rf tmp
+cp -r r tmp && rm -rf r
+cp -r tmp/* . && rm -rf tmp

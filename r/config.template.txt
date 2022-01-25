@@ -40,3 +40,4 @@ simulation_t_end           <- paste(year, '-', month, '-', day, ' %SIMULATION_T_
 simulation_t_step          <- '%SIMULATION_T_STEP%'
 simulation_release_heights <- %SIMULATION_RELEASE_HEIGHTS%  # release points above the instrument 
 simulation_angle_limit     <- %SIMULATION_ANGLE_LIMIT%  # unit:degree
+simulation_merge_background_times <- %SIMULATION_MERGE_BACKGROUND_TIMES%

@@ -1,6 +1,7 @@
 # Simulation outputs
-out/*
-_rslurm*
+out*/*
+_rslurm_*
+*.nc
 
 # System compilation outputs
 fortran/*

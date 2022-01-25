@@ -27,7 +27,7 @@ receptors <- readRDS('receptors.rds')
 hnf_plume <- T
 projection <- '+proj=longlat'
 smooth_factor <- 1
-time_integrate <- T
+time_integrate <- simulation_merge_background_times
 xmn <- area_lng_from
 xmx <- area_lng_to
 ymn <- area_lat_from
