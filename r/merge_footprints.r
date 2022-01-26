@@ -172,35 +172,58 @@ for( row in rownames(rdf) ){
 	scaling_factor <- rdf[row, 6]
 	f <- make_fp_filename(des,recep_time,zagl)
         nc_in <- nc_open(f)
-	recep_idx <- which( recep_times == recep_time)
+	receptor_time_index <- which( recep_times == recep_time)
         des_idx <- which( designators == des)
 
 	if (time_integrate) {
 		foot_0 <- ncvar_get(
 			nc_out,
 			nc_vars[[paste(des, 'foot')]],
-			start = c(1, 1, recep_idx) ,
+			start = c(1, 1, receptor_time_index) ,
 			count = c(nx,ny,1)
 		)
 		ncvar_put(
 			nc_out,
 			nc_vars[[paste(des, 'foot')]], 
 			foot_0 + ncvar_get(nc_in, 'foot') * scaling_factor,
-			start = c(1, 1, recep_idx), 
+			start = c(1, 1, receptor_time_index), 
 			count = c(nx, ny, 1)
 		)
 	} else {
-		fpt_idx1 <- which( fp_times == min(nc_in$dim$tim$vals) )
-		fpt_idx2 <- which( fp_times == max(nc_in$dim$tim$vals) )
-		fpt_length <- 1 + fpt_idx2 - fpt_idx1
+		for( footprint_time in nc_in$dim$tim$vals ) {
+			loop_index = which(nc_in$dim$tim$vals == footprint_time)
+			footprint_time_index = which(fp_times == footprint_time)
+			foot_0 <- ncvar_get(
+				nc_out,
+				nc_vars[[paste(des, 'foot')]],
+				start = c(1, 1, receptor_time_index, footprint_time_index),
+				count = c(nx, ny, 1, 1)
+			)
 
-		# TODO: aggregate footprint matrix
+			if (dim(nc_in$dim$tim$vals) > 1) {
+				ncvar_put(
+					nc_out,
+					nc_vars[[paste(des, 'foot')]], 
+					foot_0 + ncvar_get(nc_in, 'foot')[,,loop_index] * scaling_factor,
+					start = c(1, 1, receptor_time_index, footprint_time_index),
+					count = c(nx, ny, 1, 1)
+				)
+			} else {
+				ncvar_put(
+					nc_out,
+					nc_vars[[paste(des, 'foot')]], 
+					foot_0 + ncvar_get(nc_in, 'foot')[,] * scaling_factor,
+					start = c(1, 1, receptor_time_index, footprint_time_index),
+					count = c(nx, ny, 1, 1)
+				)
+			}
+		}
 	}
 
 	f <- make_bk_filename(des,recep_time,zagl)
 	bdf <- readRDS(f)
 	bk_hist <- hist(c(NULL,bdf), plot=FALSE, breaks=bk_time_breaks)
-	BIM[des_idx,,recep_idx] <-  BIM[des_idx,,recep_idx] + bk_hist$counts # sum up the BIMs for all vertical levels(Xinxu)
+	BIM[des_idx,,receptor_time_index] <-  BIM[des_idx,,receptor_time_index] + bk_hist$counts # sum up the BIMs for all vertical levels(Xinxu)
 }
 
 # vertical mean BIM: average the summed BIMs (Xinxu)
