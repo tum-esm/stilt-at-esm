@@ -196,6 +196,7 @@ df$zagl[df$zagl<1] <- 1
 df['scaling_factors'] <- mapply( add_scf,df$relative_z,df$designator)
 
 df['relative_z'] <- NULL
+df['z_sfc'] <-NULL
 
 saveRDS(df,file_name)
 
