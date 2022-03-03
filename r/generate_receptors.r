@@ -2,7 +2,7 @@
 
 require(insol)      # needed to compute solar elevation and azimuth angles
 require(geosphere, warn.conflicts = FALSE)  # needed to compute the lat-lon offset from these angles
-
+require(raster)
 source('r/config.r')
 
 t_start_original <- simulation_t_start
@@ -27,6 +27,22 @@ met_directory    <- met_path
 #------------------------------------------------
 # END OF USER INPUTS
 #------------------------------------------------
+
+# load geopotential (if available):
+surf_data = F
+if (met_type == "ERA5"){
+  # "rotate" performs translation from 0:365 deg to -180:+180 deg
+  # sfc_raster is surface altitude above sealevel in meters
+  sfc_raster = rotate(raster('./r/Geopotential_Height_ERA5.nc'))/ 9.80665# divide by g / m s-2 to obtain surface height
+  surf_data = T
+}
+
+if (surf_data){
+  xy <- cbind(longitudes, latitudes)
+  sensor_asls <- extract(sfc_raster, xy , method='bilinear') # surface height above sealevel at met-grid
+} else {
+  sensor_asls <- sensor_agls*0
+}
 
 # add the criteria here to define the appropriate running period:
 
@@ -153,9 +169,11 @@ make_receptors <- function(relative_z,designator,run_time){
 }
 
 
-add_zagl <- function(relative_z,designator){
-	sensor_agl <- sensor_agls[ which(designators == designator) ]
-	return( relative_z + sensor_agl )
+add_zagl <- function(relative_z,designator,z_sfc){
+  sensor_asl <- sensor_asls[ which(designators == designator) ] # sensor above sealevel (meters)
+	sensor_agl <- sensor_agls[ which(designators == designator) ] # sensor above groundlevel (meters)
+	# z_sfc = surface altitude above sealevel at receptor point
+	return( relative_z + sensor_agl + sensor_asl -  z_sfc)
 }
 
 
@@ -164,8 +182,17 @@ recep_lat_lon <- mapply( make_receptors, df$relative_z, df$designator, df$run_ti
 
 df['long'] <- round(recep_lat_lon[1,],3)
 df['lati'] <- round(recep_lat_lon[2,],3)
-df['zagl'] <- mapply( add_zagl , df$relative_z, df$designator )
 
+# introducing zsfc = surface elevation above sealevel (in meters)
+if(surf_data){
+  xy <- cbind(df['long'], df['lati'])
+  df['z_sfc'] <- extract(sfc_raster, xy , method='bilinear')
+}else{
+  df['z_sfc'] <- df['long']*0
+}
+
+df['zagl'] <- mapply( add_zagl , df$relative_z, df$designator, df$z_sfc )
+df$zagl[df$zagl<1] <- 1
 df['scaling_factors'] <- mapply( add_scf,df$relative_z,df$designator)
 
 df['relative_z'] <- NULL
