@@ -4,6 +4,7 @@
 year <- '%YEAR%'
 month <- '%MONTH%'
 day <- '%DAY%'
+log_path  <- '%LOG_PATH%'
 base_dir <- '%BASE_DIR%'
 project  <- '%PROJECT%'
 

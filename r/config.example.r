@@ -4,6 +4,7 @@
 year <- '2021'
 month <- '09'
 day <- '09'
+log_path <- '/gpfs/scratch/pr48ze/ge69zeh2/logs/%x.%j.%N.out'
 base_dir <- '/gpfs/scratch/pr48ze/ge69zeh2'
 project  <- 'stilt-playground'
 

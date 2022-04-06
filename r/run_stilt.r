@@ -17,7 +17,8 @@ slurm   <- TRUE
 slurm_options <- list(
   time      = slurm_timeout,
   clusters  = slurm_clusters,
-  partition = slurm_partition
+  partition = slurm_partition,
+  output    = log_path
 )
 
 # Receptors are now generated differently that in base STILT
