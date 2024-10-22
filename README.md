@@ -1,3 +1,6 @@
+**⚠️ Internally Replaced by https://github.com/tum-esm/stilt**
+
+---
 
 # STILT at ESM
 
